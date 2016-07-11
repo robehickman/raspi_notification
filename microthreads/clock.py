@@ -17,10 +17,10 @@ class clock(micro_thread):
         for name, settings in self.config.iteritems():
             display = call_on_thread('Display', 'set_exclusive', [settings['display'], self.get_time])
 
-            p = Process(target=self.display_time, args=(display=display))
+            p = Process(target=self.display_time, args=(1, display))
             p.start()
 
-    def display_time(self, display):
+    def display_time(self, ook,  display):
         while True:
             display.home()
             display.message(self.get_time())
