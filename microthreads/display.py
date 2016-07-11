@@ -75,17 +75,19 @@ class display(micro_thread):
 # Run function every n seconds
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def run_every(self, n, fun, *args):
-        pre_time = time.time()
+        while True:
+            pre_time = time.time()
 
-        fun(*args)
+            fun(*args)
 
-        post_time = time.time()
-        exec_time = post_time - pre_time
+            post_time = time.time()
+            exec_time = post_time - pre_time
 
-        next_run = n - exec_time
+            next_run = n - exec_time
 
-        if next_run > 0:
-            time.sleep(next_run)
+            if next_run > 0:
+                time.sleep(next_run)
+
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Main display loop, handle items from the display queue sent by other
