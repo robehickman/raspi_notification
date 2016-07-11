@@ -22,8 +22,9 @@ class clock(micro_thread):
 
     def display_time(self, ook,  display):
         while True:
-            display.home()
-            display.message(self.get_time())
+            lcd = display['display']
+            lcd.home()
+            lcd.message(self.get_time())
             time.sleep(1)
 
     def get_time(self):
