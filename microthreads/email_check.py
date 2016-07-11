@@ -41,12 +41,15 @@ class email_check(micro_thread):
         p.start()
 
     def main(self):
-        self.check_queue.put('check')
+        #self.check_queue.put('check')
         return 30 # run in 30 seconds
 
     def check_mail(self, check_queue, display_queue):
         while 1:
-            check_queue.get()
+            #check_queue.get()
+            time.sleep(30)
+
+            print 'checking'
 
             for name, account in self.accounts.iteritems():
                 try:
@@ -71,8 +74,9 @@ class email_check(micro_thread):
                     folder_status = server.folder_status(self.accounts[name]['mailbox'], 'UNSEEN')
                     unseen = int(folder_status['UNSEEN'])
     
+                    mail_new = unseen - self.servers[name]['previous']
 
-                    if(unseen == 0 or unseen < self.servers[name]['previous']):
+                    if(unseen == 0 or unseen <= self.servers[name]['previous']):
                         self.servers[name]['do_notify'] = False
                         self.servers[name]['previous']  = unseen
 
@@ -80,10 +84,9 @@ class email_check(micro_thread):
                         self.servers[name]['do_notify'] = True
 
                     if(self.servers[name]['do_notify'] == True):
-                        mail_new = unseen - self.servers[name]['previous']
 
                         msg = "%i new mail" % mail_new
-                        if(unseen > 1):
+                        if(mail_new > 1):
                             msg = msg + "s"
 
                         display_queue.put({

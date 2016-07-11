@@ -54,6 +54,8 @@ def microthread_scheduler(active_microthreads):
         try:
             if len(active_microthreads) > 0:
                 next_thread = active_microthreads[-1]
+
+                print next_thread
     
                 time.sleep(next_thread[0])
     
@@ -64,7 +66,8 @@ def microthread_scheduler(active_microthreads):
                 active_microthreads = threads
 
         except IOError:
-            print cur_thread
-            print next_thread
-            print active_microthreads
+             pass
+#            print cur_thread
+#            print next_thread
+#            print active_microthreads
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
  
 from multiprocessing import Queue
-import collections
+import collections, time
 
 import Adafruit_CharLCD as LCD
 import Adafruit_GPIO.PCF8574 as AGPIO
@@ -91,7 +91,11 @@ class display(micro_thread):
 
                     if(scr['scr_wait'] <= 1):
                         lcd = scr['display']
-                        lcd.set_backlight(False)
+                        if(time.localtime().tm_hour > 8 and time.localtime().tm_hour < 23):
+                            lcd.set_backlight(False)
+                        else:
+                            lcd.set_backlight(True)
+
                         lcd.home()
                         lcd.message(scr['screens'][display_scr])
 

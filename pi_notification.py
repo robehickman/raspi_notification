@@ -30,13 +30,13 @@ def read_config(file):
 		config[section] = sect
 	return config
 
-config = read_config('conf.ini');
+config = read_config('/home/pi/.notification_conf.ini');
 
 
 
 # Register micro threads
 microthreads = {
-	'Notify_LED':  notify_led(),
+#	'Notify_LED':  notify_led(),
 	'Email_check': email_check(),
 	'Display':     display.display(),
 	'Clock':       clock()
