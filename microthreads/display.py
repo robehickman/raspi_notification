@@ -92,6 +92,8 @@ class display(micro_thread):
 # modules, and exclusive screens.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def update_displays(self, display_queue):
+        print 'here'
+
         # Handle any new items in the display queue
         while not display_queue.empty():
             item = display_queue.get()
