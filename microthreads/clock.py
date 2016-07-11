@@ -15,6 +15,8 @@ class clock(micro_thread):
 
     def setup(self):
         for name, settings in self.config.iteritems():
+            print 'exclusive'
+
             display = call_on_thread('Display', 'set_exclusive', [settings['display'], self.get_time])
 
             p = Process(target=self.display_time, args=(1, display))
@@ -24,7 +26,9 @@ class clock(micro_thread):
         while True:
             lcd = display['display']
             lcd.home()
-            lcd.message(self.get_time())
+            format_time = self.get_time()
+            print format_time
+            lcd.message(format_time)
             time.sleep(1)
 
     def get_time(self):
