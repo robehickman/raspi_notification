@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import time
  
 from microthread import *
@@ -21,9 +19,6 @@ class clock(micro_thread):
         return time.strftime("%a %d %b %Y \n %I %M %S  (%m)", time.localtime())
 
     def main(self):
-        #tm = time.strftime("%d %b(%m) %Y \n %I %M %S", time.localtime())
-        #display.display_queue.put(tm)
-
         return 1
 
 

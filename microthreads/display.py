@@ -1,6 +1,5 @@
-#!/usr/bin/env python
- 
-from multiprocessing import Queue
+from multiprocessing import Process, Queue
+
 import collections, time
 
 import Adafruit_CharLCD as LCD
@@ -25,9 +24,15 @@ class display(micro_thread):
     config   = {}
     displays = {}
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Store configuration item
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def pass_config(self, name, conf):
         self.config[name] = conf
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Set up the connections to the configured LCD displays
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def setup(self):
         for name, settings in self.config.iteritems():
 
@@ -48,8 +53,48 @@ class display(micro_thread):
                 'scr_keys' : [], #Keys of avalible screens
                 'scr_index': 0, #Current displayed screen
                 'scr_wait' : 0} # Delay until next screen
-    def main(self):
 
+        p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
+        p.start()
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Method that may be called from other modules to acquire exclusive access
+# to a screen, and register a display callback for it.
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def set_exclusive(self, screen, callback):
+        self.displays[screen]['exclusive'] = callback
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Null main method as we are using a subprocess
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def main(self):
+        return 1 # next run in 1 second
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Run function every n seconds
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def run_every(self, n, fun, *args):
+        pre_time = time.time()
+
+        fun(*args)
+
+        post_time = time.time()
+        exec_time = post_time - pre_time
+
+        next_run = n - exec_time
+
+        if next_run > 0:
+            time.sleep(next_run)
+
+        
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Main display loop, handle items from the display queue sent by other
+# modules, and exclusive screens.
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def update_displays(self):
+        # Handle any new items in the display queue
         while not display_queue.empty():
             item = display_queue.get()
 
@@ -63,17 +108,23 @@ class display(micro_thread):
                 if(s_name in self.displays[item['display']]['screens']):
                     del self.displays[item['display']]['screens'][s_name]
 
+        # Update what is shown on the displays
         for name, scr in self.displays.iteritems():
             exclusive = scr['exclusive']
+
+            # exclusive screen
             if(exclusive != None):
                 lcd = scr['display']
                 lcd.home()
                 lcd.message(exclusive())
+
+            # non exclusive screen
             else:
                 if(scr['screens'].keys() != scr['scr_keys']):
                     scr['scr_keys'] = scr['screens'].keys()
                     scr['scr_index'] = 0
 
+                # if there are no items to show on the display blank it and turn off the backlight
                 if(scr['scr_keys'] == []):
                     lcd = scr['display']
                     lcd.set_backlight(True)
@@ -84,6 +135,8 @@ class display(micro_thread):
                         default = self.config[name]['default'] + default
 
                     lcd.message(default)
+
+                # else show the items in a loop
                 else:
                     display_scr = scr['scr_keys'][scr['scr_index']]
 
@@ -106,8 +159,5 @@ class display(micro_thread):
                         if(scr['scr_index'] > len(scr['scr_keys']) - 1):
                             scr['scr_index'] = 0
 
-        return 1 # next run in 1 second
 
-    def set_exclusive(self, screen, callback):
-	self.displays[screen]['exclusive'] = callback
 
