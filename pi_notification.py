@@ -57,7 +57,7 @@ for t in microthreads.values():
 	active_microthreads.append((delay, t))
 	delay += 0.5
 
-microthread_scheduler(active_microthreads)
+#microthread_scheduler(active_microthreads)
 
 
 
