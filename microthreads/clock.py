@@ -13,7 +13,11 @@ class clock(micro_thread):
 
     def setup(self):
         for name, settings in self.config.iteritems():
-            call_on_thread('Display', 'set_exclusive', [settings['display'], self.get_time])
+            display = call_on_thread('Display', 'set_exclusive', [settings['display'], self.get_time])
+
+            print display
+
+
 
     def get_time(self):
         return time.strftime("%a %d %b %Y \n %I %M %S  (%m)", time.localtime())

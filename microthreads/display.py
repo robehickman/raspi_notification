@@ -57,13 +57,13 @@ class display(micro_thread):
         p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
         p.start()
 
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Method that may be called from other modules to acquire exclusive access
 # to a screen, and register a display callback for it.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_exclusive(self, screen, callback):
-        self.displays[screen]['exclusive'] = callback
+        #self.displays[screen]['exclusive'] = callback
+        return self.displays[screen]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Null main method as we are using a subprocess
@@ -94,7 +94,6 @@ class display(micro_thread):
 # modules, and exclusive screens.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def update_displays(self, display_queue):
-        print 'here'
 
         # Handle any new items in the display queue
         while not display_queue.empty():
