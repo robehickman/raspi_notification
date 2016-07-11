@@ -115,9 +115,10 @@ class display(micro_thread):
 
             # exclusive screen
             if(exclusive != None):
-                lcd = scr['display']
-                lcd.home()
-                lcd.message(exclusive())
+                pass
+                #lcd = scr['display']
+                #lcd.home()
+                #lcd.message(exclusive())
 
             # non exclusive screen
             else:
