@@ -87,13 +87,11 @@ class display(micro_thread):
         if next_run > 0:
             time.sleep(next_run)
 
-        
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Main display loop, handle items from the display queue sent by other
 # modules, and exclusive screens.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def update_displays(self):
+    def update_displays(self, display_queue):
         # Handle any new items in the display queue
         while not display_queue.empty():
             item = display_queue.get()
