@@ -57,7 +57,7 @@ class display(micro_thread):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Start subprocess
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def start_process():
+    def start_process(self):
         print 'starting display process'
         p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
         p.start()
