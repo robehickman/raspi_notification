@@ -68,8 +68,8 @@ class display(micro_thread):
 # to a screen, and register a display callback for it.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_exclusive(self, screen, callback):
-        #self.displays[screen]['exclusive'] = callback
-        return self.displays[screen]
+        self.displays[screen]['exclusive'] = callback
+        #return self.displays[screen]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Null main method as we are using a subprocess
