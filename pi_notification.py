@@ -50,6 +50,7 @@ for section in config:
 
 # begin worker processes after the whole system is configured
 for key, microthread in microthreads.iteritems():
+    print microthread
 	microthread.start_process()
 
 
