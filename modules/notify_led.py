@@ -9,6 +9,13 @@ from module import *
 
 class notify_led(module):
     state = 0
+    config = {}
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Store configuration item
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def pass_config(self, name, conf):
+        self.config[name] = conf
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 # Start led flasher process

@@ -26,13 +26,12 @@ def read_config(file):
 
 ## module class ##
 class module(object):
-    config   = {}
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Store configuration item
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def pass_config(self, name, conf):
-        self.config[name] = conf
+        pass
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Modules setup method, should be overridden

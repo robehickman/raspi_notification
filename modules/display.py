@@ -22,6 +22,13 @@ display_queue = Queue()
 
 class display(module):
     displays = {}
+    config = {}
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Store configuration item
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def pass_config(self, name, conf):
+        self.config[name] = conf
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Set up the connections to the configured LCD displays

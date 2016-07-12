@@ -10,6 +10,13 @@ import display
 
 class email_check(module):
     servers   = {}
+    config = {}
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Store configuration item
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def pass_config(self, name, conf):
+        self.config[name] = conf
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 # Create initial state
