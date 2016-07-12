@@ -5,7 +5,7 @@ import collections, time
 import Adafruit_CharLCD as LCD
 import Adafruit_GPIO.PCF8574 as AGPIO
 
-from microthread import *
+from module import *
 
 
 # Display Pins
@@ -20,15 +20,8 @@ lcd_d7        = 7
 
 display_queue = Queue()
 
-class display(micro_thread):
-    config   = {}
+class display(module):
     displays = {}
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Store configuration item
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def pass_config(self, name, conf):
-        self.config[name] = conf
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Set up the connections to the configured LCD displays
@@ -68,13 +61,6 @@ class display(micro_thread):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def set_exclusive(self, screen, callback):
         self.displays[screen]['exclusive'] = callback
-        #return self.displays[screen]
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Null main method as we are using a subprocess
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    def main(self):
-        return 1 # next run in 1 second
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Run function every n seconds

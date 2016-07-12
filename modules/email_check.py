@@ -1,27 +1,21 @@
 #!/usr/bin/env python
  
-from multiprocessing import Process, Queue
+from multiprocessing import Process
 import collections
 import time
 from imapclient import IMAPClient
 
-from microthread import *
+from module import *
 import display
 
-class email_check(micro_thread):
+class email_check(module):
     servers   = {}
-    accounts = {}
 
-    def connect_server(self, hostname, port, username, password):
-        server = IMAPClient(hostname, port, use_uid=True, ssl=True)
-        server.login(username, password)
-        return server
-
-    def pass_config(self, name, conf):
-        self.accounts[name] = conf
-
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Create initial state
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def setup(self):
-        for name, account in self.accounts.iteritems():
+        for name, account in self.config.iteritems():
             server = self.connect_server(
                 account['smtp_server'],
                 account['smtp_port'],
@@ -36,23 +30,31 @@ class email_check(micro_thread):
                 'previous':  previous,
                 'do_notify': False}
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Begin mail checking process
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
-        self.check_queue = Queue()
-        p = Process(target=self.check_mail, args=(self.check_queue, display.display_queue))
+        p = Process(target=self.check_mail, args=(display.display_queue))
         p.start()
 
-    def main(self):
-        #self.check_queue.put('check')
-        return 30 # run in 30 seconds
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Connect to mail server
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+    def connect_server(self, hostname, port, username, password):
+        server = IMAPClient(hostname, port, use_uid=True, ssl=True)
+        server.login(username, password)
+        return server
 
-    def check_mail(self, check_queue, display_queue):
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Repeatedly check servers for new mail and add to display queue
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+    def check_mail(self, display_queue):
         while 1:
-            #check_queue.get()
             time.sleep(30)
 
             print 'checking'
 
-            for name, account in self.accounts.iteritems():
+            for name, account in self.config.iteritems():
                 try:
                     server = self.connect_server(
                         account['smtp_server'],
@@ -69,10 +71,10 @@ class email_check(micro_thread):
 
             for name, srv in self.servers.iteritems():
                 try:
-                    abriv_name = self.accounts[name]['abbreviation']
+                    abriv_name = self.config[name]['abbreviation']
                     server = srv['server']
         
-                    folder_status = server.folder_status(self.accounts[name]['mailbox'], 'UNSEEN')
+                    folder_status = server.folder_status(self.config[name]['mailbox'], 'UNSEEN')
                     unseen = int(folder_status['UNSEEN'])
     
                     mail_new = unseen - self.servers[name]['previous']
@@ -91,14 +93,14 @@ class email_check(micro_thread):
                             msg = msg + "s"
 
                         display_queue.put({
-                            'display' : self.accounts[name]['display'],
+                            'display' : self.config[name]['display'],
                             'method'  : 'replace_screen',
                             'name'    : name,
                             'data'    :  abriv_name + ' ' + msg + "\n" + '                 '})
 
                     else:
                         display_queue.put({
-                            'display' : self.accounts[name]['display'],
+                            'display' : self.config[name]['display'],
                             'method'  : 'delete_screen',
                             'name'    : name})
 

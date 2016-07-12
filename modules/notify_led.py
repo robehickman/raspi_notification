@@ -3,27 +3,23 @@ import os
 import time
 from multiprocessing import Process
 
-
-
-
- 
-from microthread import *
+from module import *
 
 # Handle notification LEDs
 
-class notify_led(micro_thread):
+class notify_led(module):
     state = 0
-    def __init__(self):
-        pass
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Start led flasher process
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
         p = Process(target=self.flash, args=())
         p.start()
 
-    def main(self):
-        return 600
-
-
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+# Flash the led
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def flash(self):
         while 1:
             if(self.state == 0):
