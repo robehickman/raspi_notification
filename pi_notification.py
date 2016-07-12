@@ -33,7 +33,6 @@ def read_config(file):
 config = read_config('/home/pi/.notification_conf.ini');
 
 
-
 # Register micro threads
 microthreads = {
 #   'Notify_LED':  notify_led(),
@@ -44,28 +43,17 @@ microthreads = {
 
 set_microthreads(microthreads)
 
+print 'Passing configs'
 for section in config:
     module = config[section]['module']
     microthreads[module].pass_config(section, config[section])
 
+print 'Running setup'
+for key in microthreads:
+    microthreads[key].setup()
+
+print 'Starting workers'
 # begin worker processes after the whole system is configured
 for key, microthread in microthreads.iteritems():
-    print microthread
     microthread.start_process()
-
-
-active_microthreads = []
-
-delay = 0
-for t in microthreads.values():
-    t.setup()
-    active_microthreads.append((delay, t))
-    delay += 0.5
-
-#microthread_scheduler(active_microthreads)
-
-
-
-
-
 

@@ -58,7 +58,6 @@ class display(micro_thread):
 # Start subprocess
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def start_process(self):
-        print 'starting display process'
         global display_queue
         p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
         p.start()
@@ -100,7 +99,6 @@ class display(micro_thread):
 # modules, and exclusive screens.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def update_displays(self, display_queue):
-        print 'updating display'
 
         # Handle any new items in the display queue
         while not display_queue.empty():
