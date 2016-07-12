@@ -41,7 +41,7 @@ class email_check(module):
 # Begin mail checking process
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
-        p = Process(target=self.check_mail, args=(display.display_queue))
+        p = Process(target=self.check_mail, args=[display.display_queue])
         p.start()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
