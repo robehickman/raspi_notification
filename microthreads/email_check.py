@@ -18,7 +18,7 @@ class email_check(micro_thread):
         return server
 
     def pass_config(self, name, conf):
-    self.accounts[name] = conf
+        self.accounts[name] = conf
 
     def setup(self):
         for name, account in self.accounts.iteritems():
