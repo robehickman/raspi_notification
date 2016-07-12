@@ -54,6 +54,10 @@ class display(micro_thread):
                 'scr_index': 0, #Current displayed screen
                 'scr_wait' : 0} # Delay until next screen
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Start subprocess
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def start_process():
         p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
         p.start()
 
@@ -115,10 +119,9 @@ class display(micro_thread):
 
             # exclusive screen
             if(exclusive != None):
-                pass
-                #lcd = scr['display']
-                #lcd.home()
-                #lcd.message(exclusive())
+                lcd = scr['display']
+                lcd.home()
+                lcd.message(exclusive())
 
             # non exclusive screen
             else:

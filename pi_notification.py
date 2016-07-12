@@ -48,6 +48,10 @@ for section in config:
 	module = config[section]['module']
 	microthreads[module].pass_config(section, config[section])
 
+# begin worker processes after the whole system is configured
+for section in config:
+	microthreads[module].start_process()
+
 
 active_microthreads = []
 

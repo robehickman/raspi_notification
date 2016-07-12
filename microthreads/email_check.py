@@ -18,10 +18,10 @@ class email_check(micro_thread):
         return server
 
     def pass_config(self, name, conf):
-	self.accounts[name] = conf
+    self.accounts[name] = conf
 
     def setup(self):
-	for name, account in self.accounts.iteritems():
+        for name, account in self.accounts.iteritems():
             server = self.connect_server(
                 account['smtp_server'],
                 account['smtp_port'],
@@ -36,6 +36,7 @@ class email_check(micro_thread):
                 'previous':  previous,
                 'do_notify': False}
 
+    def start_process():
         self.check_queue = Queue()
         p = Process(target=self.check_mail, args=(self.check_queue, display.display_queue))
         p.start()

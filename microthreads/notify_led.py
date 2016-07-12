@@ -14,6 +14,9 @@ from microthread import *
 class notify_led(micro_thread):
     state = 0
     def __init__(self):
+        pass
+
+    def start_process():
         p = Process(target=self.flash, args=())
         p.start()
 
