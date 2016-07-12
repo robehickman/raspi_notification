@@ -36,7 +36,7 @@ class email_check(micro_thread):
                 'previous':  previous,
                 'do_notify': False}
 
-    def start_process():
+    def start_process(self):
         self.check_queue = Queue()
         p = Process(target=self.check_mail, args=(self.check_queue, display.display_queue))
         p.start()

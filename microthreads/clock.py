@@ -18,7 +18,7 @@ class clock(micro_thread):
             call_on_thread('Display', 'set_exclusive', [settings['display'], self.get_time])
 
 
-    def start_process():
+    def start_process(self):
         pass
         #p = Process(target=self.display_time, args=(1, display))
         #p.start()

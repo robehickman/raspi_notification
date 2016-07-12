@@ -16,7 +16,7 @@ class notify_led(micro_thread):
     def __init__(self):
         pass
 
-    def start_process():
+    def start_process(self):
         p = Process(target=self.flash, args=())
         p.start()
 
