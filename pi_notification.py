@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys
-import ConfigParser
 
 sys.path = [ './lib' ] + sys.path
 sys.path = [ './modules' ] + sys.path
