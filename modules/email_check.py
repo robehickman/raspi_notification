@@ -41,7 +41,7 @@ class email_check(module):
 
         # do initial setup
         for name, account in self.config.iteritems():
-            server = self.connect_server(
+            server = connect_server(
                 account['smtp_server'],
                 account['smtp_port'],
                 account['smtp_username'],
@@ -61,7 +61,7 @@ class email_check(module):
             print 'checking'
 
             for name, account in self.config.iteritems():
-                server = self.connect_server(
+                server = connect_server(
                     account['smtp_server'],
                     account['smtp_port'],
                     account['smtp_username'],
