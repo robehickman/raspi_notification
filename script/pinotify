@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 
-from pinotify.module_system       import *
-from pinotify.plugins.display     import *
-from pinotify.plugins.email_check import *
-from pinotify.plugins.clock       import *
+import pinotify.module_system       as mod
+import pinotify.plugins.display     as dsp
+import pinotify.plugins.email_check as eml
+import pinotify.plugins.clock       as clk
 
 
 config = read_config('/etc/pinotify/pinotify.ini');
 
 # Register modules
 modules = {
-    'Email_check': email_check(),
-    'Display':     display.display(),
-    'Clock':       clock()
+    'Email_check': eml.email_check(),
+    'Display':     dsp.display(),
+    'Clock':       clk.clock()
 }
 
-set_modules(modules)
-pass_configuration(config)
-start_workers()
+mod.set_modules(modules)
+mod.pass_configuration(config)
+mod.start_workers()
 
 
