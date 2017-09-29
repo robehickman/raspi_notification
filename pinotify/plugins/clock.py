@@ -2,8 +2,8 @@ import time
  
 from multiprocessing import Process
 
-from module import *
-import display
+from pinotify.module_system       import *
+#import display
 
 class clock(module):
     config = {}

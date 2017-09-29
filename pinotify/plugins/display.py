@@ -5,8 +5,7 @@ import collections, time
 import Adafruit_CharLCD as LCD
 import Adafruit_GPIO.PCF8574 as AGPIO
 
-from module import *
-
+from pinotify.module_system       import *
 
 # Display Pins
 lcd_rs        = 0

@@ -1,9 +1,8 @@
-#!/usr/bin/env python
 import os
 import time
 from multiprocessing import Process
 
-from module import *
+from pinotify.module_system import *
 
 # Handle notification LEDs
 

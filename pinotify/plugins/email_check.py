@@ -1,12 +1,10 @@
-#!/usr/bin/env python
- 
 from multiprocessing import Process
 import collections
 import time
 from imapclient import IMAPClient
 
-from module import *
-import display
+from pinotify.module_system       import *
+import pinotify.plugins.display
 
 class email_check(module):
     def __init__(self):
