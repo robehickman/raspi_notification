@@ -9,7 +9,7 @@ from module import *
 import display
 
 class email_check(module):
-    def __init__():
+    def __init__(self):
         self.servers   = {}
         self.config = {}
 
