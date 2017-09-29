@@ -70,7 +70,6 @@ class email_check(module):
                 #self.servers[name]['server'] = server
 
                 abriv_name = self.config[name]['abbreviation']
-                server = srv['server']
     
                 folder_status = server.folder_status(self.config[name]['mailbox'], 'UNSEEN')
                 unseen = int(folder_status['UNSEEN'])
