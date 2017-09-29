@@ -15,8 +15,6 @@ setup(
     author_email='robehickman@gmail.com',
     license='MIT',
     packages=['pinotify', 'pinotify.plugins'],
-    test_suite='nose.collector',
-    tests_require=['nose'],
     install_requires=[
     ],
     scripts=['script/pinotify'],
