@@ -6,7 +6,7 @@ import pinotify.plugins.email_check as eml
 import pinotify.plugins.clock       as clk
 
 
-config = read_config('/etc/pinotify/pinotify.ini');
+config = mod.read_config('/etc/pinotify/pinotify.ini');
 
 # Register modules
 modules = {
