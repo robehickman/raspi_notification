@@ -4,7 +4,7 @@ import time
 from imapclient import IMAPClient
 
 from pinotify.module_system       import *
-import pinotify.plugins.display
+import pinotify.plugins.display as dsp
 
 class email_check(module):
     def __init__(self):
@@ -24,7 +24,7 @@ class email_check(module):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
         """ Begin mail checking process """
-        p = Process(target=self.check_mail, args=[display.display_queue])
+        p = Process(target=self.check_mail, args=[dsp.display_queue])
         p.start()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
