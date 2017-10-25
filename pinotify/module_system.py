@@ -12,7 +12,7 @@ def read_config(file):
 
     config = {}
     for section in conf_file.sections():
-        config[] = {option : conf_file.get(section, option) for option in conf_file.options(section)}
+        config[section] = {option : conf_file.get(section, option) for option in conf_file.options(section)}
     return config
 
 
