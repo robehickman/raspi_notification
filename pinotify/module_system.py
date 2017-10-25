@@ -65,7 +65,7 @@ def start_workers():
     global modules, workers
     print 'Starting workers'
 
-    for n, module in enumerate(itervalues(modules)):
+    for n, module in enumerate(modules.itervalues()):
         p = Process(target=module.start_process); p.start()
         workers[n] = (p, module) # Keep the process and the app to monitor or restart
 
@@ -75,7 +75,7 @@ def check_workers():
     global workers
 
     new_workers = {}
-    for n, worker in iteritems(workers):
+    for n, worker in workers.iteritems():
         p, module = worker
         if not p.is_alive():
             np = Process(target=module.start_process); np.start()
