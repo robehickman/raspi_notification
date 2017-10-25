@@ -75,7 +75,7 @@ def check_workers():
     global workers
 
     new_workers = {}
-    for n, worker in iteritems(workers)):
+    for n, worker in iteritems(workers):
         p, module = worker
         if not p.is_alive():
             np = Process(target=module.start_process); np.start()
