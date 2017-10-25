@@ -37,7 +37,6 @@ class email_check(module):
                 #----
                 if unseen <= previous_unseen:
                     previous_unseen = unseen
-
                     dsp.display_queue.put({'display' : self.config[name]['display'],
                                            'method'  : 'delete_screen',
                                            'name'    : name})
