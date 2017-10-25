@@ -37,18 +37,13 @@ class email_check(module):
                 #----
                 if unseen <= previous_unseen:
                     previous_unseen = unseen
-
                     dsp.display_queue.put({'display' : self.config[name]['display'],
                                            'method'  : 'delete_screen',
                                            'name'    : name})
 
                 elif unseen > previous_unseen:
                     mail_new = unseen - previous_unseen
-
-                    msg = "%i new mail" % mail_new
-                    if(mail_new > 1):
-                        msg = msg + "s"
-
+                    msg = "%i new mail" % mail_new if mail_new > 1 else msg + "s"
                     dsp.display_queue.put({'display' : self.config[name]['display'],
                                            'method'  : 'replace_screen',
                                            'name'    : name,
