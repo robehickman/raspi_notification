@@ -1,4 +1,3 @@
-from multiprocessing import Process
 import collections
 import time
 from imapclient import IMAPClient
@@ -16,7 +15,6 @@ class email_check(module):
         """ Store configuration item """
         self.config[name] = conf
 
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def setup(self):
         pass
@@ -24,8 +22,7 @@ class email_check(module):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
         """ Begin mail checking process """
-        p = Process(target=self.check_mail, args=[dsp.display_queue])
-        p.start()
+        check_mail(self, dsp.display_queue)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def check_mail(self, display_queue):
@@ -51,7 +48,6 @@ class email_check(module):
                 'previous':  previous,
                 'do_notify': False}
 
-
         # main checking loop
         while 1:
             time.sleep(30)
@@ -76,7 +72,7 @@ class email_check(module):
                 #if unseen < self.servers[name]['previous']:
                 #    self.servers[name]['previous']  = unseen
 
-                if(unseen == 0 or unseen < self.servers[name]['previous']):
+                if(unseen == 0 or unseen <= self.servers[name]['previous']):
                     self.servers[name]['do_notify'] = False
                     self.servers[name]['previous']  = unseen
 

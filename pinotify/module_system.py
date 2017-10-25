@@ -1,69 +1,52 @@
+from multiprocessing import Process
 import ConfigParser
 import collections
 import time
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Read configuration file into a dict
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def read_config(file):
+    """ Read configuration file into a dict """
+
     conf_file = ConfigParser.ConfigParser()
     conf_file.read(file)
 
     config = {}
-
     for section in conf_file.sections():
-        sect = {}
-
-        options = conf_file.options(section)
-
-        for option in options:
-            sect[option] = conf_file.get(section, option)
-        config[section] = sect
+        config[] = {option : conf_file.get(section, option) for option in conf_file.options(section)}
     return config
 
 
-## module class ##
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class module(object):
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Store configuration item
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def pass_config(self, name, conf):
+        """ Store configuration item """
         pass
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Modules setup method, should be overridden
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def setup(self):
+        """ Modules setup method, should be overridden """
         pass
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Modules setup method, should be overridden
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def start_process(self):
-        pass
-
+        """ Modules setup method, should be overridden """
+        while True: time.sleep(10)
 
 modules = {}
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Set a dictionary of module objects
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def set_modules(m):
+    """ Set a dictionary of module objects """
     global modules
     modules = m
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Get registered module objects
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def get_modules():
+    """ Get registered module objects """
     global modules
     return modules
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Pass configuration values from config to the modules
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def pass_configuration(config):
+    """ Pass configuration values from config to the modules """
     global modules
 
     print 'Passing configuration'
@@ -76,20 +59,34 @@ def pass_configuration(config):
         modules[key].setup()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Start module worker processes
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+workers = {}
 def start_workers():
-    global modules
-
+    """ Start module worker processes """
+    global modules, workers
     print 'Starting workers'
-    # begin worker processes after the whole system is configured
-    for key in modules:
-        modules[key].start_process()
+
+    for n, module in enumerate(itervalues(modules)):
+        p = Process(target=module.start_process); p.start()
+        workers[n] = (p, module) # Keep the process and the app to monitor or restart
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Call a named method on a registered module
+def check_workers():
+    """ Check that workers are still running and restart if not """
+    global workers
+
+    new_workers = {}
+    for n, worker in iteritems(workers)):
+        p, module = worker
+        if not p.is_alive():
+            np = Process(target=module.start_process); np.start()
+            new_workers[n] = (p, module)
+        else: 
+            new_workers[n] = worker
+    workers = new_workers
+
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def call_on_module(name, method, data):
+    """ Call a named method on a registered module """
     global modules
     return getattr(modules[name], method)(*data)
 

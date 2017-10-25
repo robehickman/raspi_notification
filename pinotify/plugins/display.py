@@ -58,8 +58,7 @@ class display(module):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def start_process(self):
         global display_queue
-        p = Process(target=self.run_every, args=(1, self.update_displays, display_queue))
-        p.start()
+        self.run_every(1, self.update_displays, display_queue)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Method that may be called from other modules to acquire exclusive access
