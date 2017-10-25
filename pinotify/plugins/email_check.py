@@ -7,7 +7,6 @@ import pinotify.plugins.display as dsp
 
 class email_check(module):
     def __init__(self):
-        self.servers   = {}
         self.config = {}
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -16,72 +15,31 @@ class email_check(module):
         self.config[name] = conf
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    def setup(self):
-        pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
-        """ Begin mail checking process """
-        self.check_mail(dsp.display_queue)
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    def check_mail(self, display_queue):
         """ Repeatedly check servers for new mail and add to display queue """
 
-        def connect_server(hostname, port, username, password):
-            """ Connect to mail server """
-            server = IMAPClient(hostname, port, use_uid=True, ssl=True)
-            server.login(username, password)
-            return server
-
-        # do initial setup
-        for name, account in self.config.iteritems():
-            server = connect_server(
-                account['smtp_server'],
-                account['smtp_port'],
-                account['smtp_username'],
-                account['smtp_password'])
-
-            previous = server.folder_status(account['mailbox'], 'UNSEEN')['UNSEEN']
-    
-            self.servers[name] = {
-                'previous':  previous,
-                'do_notify': False}
-
-        # main checking loop
         while 1:
-            time.sleep(30)
-
             print 'checking'
-
             for name, account in self.config.iteritems():
-                server = connect_server(
-                    account['smtp_server'],
-                    account['smtp_port'],
-                    account['smtp_username'],
-                    account['smtp_password'])
+                server = IMAPClient(account['smtp_server'], account['smtp_port'], use_uid=True, ssl=True)
+                server.login(account['smtp_username'], account['smtp_password'])
 
-                #self.servers[name]['server'] = server
-
-                abriv_name = self.config[name]['abbreviation']
     
                 folder_status = server.folder_status(self.config[name]['mailbox'], 'UNSEEN')
                 unseen = int(folder_status['UNSEEN'])
 
+                try:
+                    with open('/etc/pinotify/prev/' + name, 'r') as f:
+                        previous_unseen = int(f.read()) 
+                except:
+                    previous_unseen = unseen
 
-                #if unseen < self.servers[name]['previous']:
-                #    self.servers[name]['previous']  = unseen
+                #----
+                if unseen <= previous_unseen:
+                    previous_unseen = unseen
 
-                if(unseen == 0 or unseen <= self.servers[name]['previous']):
-                    self.servers[name]['do_notify'] = False
-                    self.servers[name]['previous']  = unseen
-
-                elif(unseen > self.servers[name]['previous']):
-                    self.servers[name]['do_notify'] = True
-                    #self.servers[name]['previous']  = unseen
-
-                if(self.servers[name]['do_notify'] == True):
-                    mail_new = unseen - self.servers[name]['previous']
+                elif unseen > previous_unseen:
+                    mail_new = unseen - previous_unseen
 
                     msg = "%i new mail" % mail_new
                     if(mail_new > 1):
@@ -91,7 +49,7 @@ class email_check(module):
                         'display' : self.config[name]['display'],
                         'method'  : 'replace_screen',
                         'name'    : name,
-                        'data'    :  abriv_name + ' ' + msg + "\n" + '                 '})
+                        'data'    : self.config[name]['abbreviation'] + ' ' + msg + "\n" + ''})
 
                 else:
                     display_queue.put({
@@ -99,5 +57,10 @@ class email_check(module):
                         'method'  : 'delete_screen',
                         'name'    : name})
 
+
+                with open('/etc/pinotify/prev/' + name, 'w') as f:
+                    f.write(str(previous_unseen)) 
+
                 server.logout()
 
+            time.sleep(30)
