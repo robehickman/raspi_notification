@@ -22,7 +22,7 @@ class email_check(module):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
         """ Begin mail checking process """
-        check_mail(self, dsp.display_queue)
+        self.check_mail(self, dsp.display_queue)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def check_mail(self, display_queue):
