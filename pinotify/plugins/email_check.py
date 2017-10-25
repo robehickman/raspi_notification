@@ -38,6 +38,10 @@ class email_check(module):
                 if unseen <= previous_unseen:
                     previous_unseen = unseen
 
+                    dsp.display_queue.put({'display' : self.config[name]['display'],
+                                           'method'  : 'delete_screen',
+                                           'name'    : name})
+
                 elif unseen > previous_unseen:
                     mail_new = unseen - previous_unseen
 
@@ -45,18 +49,10 @@ class email_check(module):
                     if(mail_new > 1):
                         msg = msg + "s"
 
-                    display_queue.put({
-                        'display' : self.config[name]['display'],
-                        'method'  : 'replace_screen',
-                        'name'    : name,
-                        'data'    : self.config[name]['abbreviation'] + ' ' + msg + "\n" + ''})
-
-                else:
-                    display_queue.put({
-                        'display' : self.config[name]['display'],
-                        'method'  : 'delete_screen',
-                        'name'    : name})
-
+                    dsp.display_queue.put({'display' : self.config[name]['display'],
+                                           'method'  : 'replace_screen',
+                                           'name'    : name,
+                                           'data'    : self.config[name]['abbreviation'] + ' ' + msg + "\n" + ''})
 
                 with open('/etc/pinotify/prev/' + name, 'w') as f:
                     f.write(str(previous_unseen)) 
