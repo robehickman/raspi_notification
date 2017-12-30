@@ -67,7 +67,6 @@ class email_check(module):
 
                     with open('/etc/pinotify/prev/' + name, 'w') as f:
                         f.write(str(previous_unseen))
-
                 time.sleep(30)
             except:
                 pass
