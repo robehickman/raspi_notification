@@ -36,17 +36,16 @@ class email_check(module):
                     p.start(); p.join();
                     unseen = q.get()
 
-                    print name
-                    print unseen
-
-                    if unseen == 'error': continue
+                    if unseen == 'error':
+                        print 'error'
+                        print name
+                        continue
                     else: pass
 
                     try:
                         with open('/etc/pinotify/prev/' + name, 'r') as f:
                             previous_unseen = int(f.read())
                     except:
-                        raise
                         previous_unseen = unseen
 
                     #----
@@ -71,5 +70,4 @@ class email_check(module):
 
                 time.sleep(30)
             except:
-                raise
                 pass
