@@ -35,6 +35,7 @@ class email_check(module):
                     p.start(); p.join();
                     unseen = q.get()
 
+                    print name
                     print unseen
 
                     if unseen == 'error': continue
