@@ -33,7 +33,6 @@ class email_check(module):
 
         while True:
             try:
-                print 'checking'
                 for name, account in self.config.iteritems():
                     p = Process(target=self.check_mail, args=(account, q))
                     p.start(); p.join();
