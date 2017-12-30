@@ -45,6 +45,7 @@ class email_check(module):
                         with open('/etc/pinotify/prev/' + name, 'r') as f:
                             previous_unseen = int(f.read())
                     except:
+                        raise
                         previous_unseen = unseen
 
                     #----
@@ -70,4 +71,6 @@ class email_check(module):
                     server.logout()
 
                 time.sleep(30)
-            except: pass
+            except:
+                raise
+                pass
