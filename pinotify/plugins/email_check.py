@@ -21,6 +21,7 @@ class email_check(module):
         folder_status = server.folder_status('Inbox', 'UNSEEN')
         unseen = int(folder_status['UNSEEN'])
         q.put(unseen)
+        server.logout()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
@@ -67,8 +68,6 @@ class email_check(module):
 
                     with open('/etc/pinotify/prev/' + name, 'w') as f:
                         f.write(str(previous_unseen))
-
-                    server.logout()
 
                 time.sleep(30)
             except:
