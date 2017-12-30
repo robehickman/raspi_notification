@@ -1,6 +1,6 @@
-import collections
-import time
+from multiprocessing import Process, Queue
 from imapclient import IMAPClient
+import collections, time
 
 from pinotify.module_system       import *
 import pinotify.plugins.display as dsp
@@ -14,46 +14,60 @@ class email_check(module):
         """ Store configuration item """
         self.config[name] = conf
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    def check_mail(self, account, q):
+        try:
+            server = IMAPClient(account['smtp_server'], account['smtp_port'], use_uid=True, ssl=True, timeout=10)
+            server.login(account['smtp_username'], account['smtp_password'])
+            folder_status = server.folder_status('Inbox', 'UNSEEN')
+            unseen = int(folder_status['UNSEEN'])
+            q.put(unseen)
+        except:
+            q.put('error')
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
         """ Repeatedly check servers for new mail and add to display queue """
 
-        while 1:
-            print 'checking'
-            for name, account in self.config.iteritems():
-                server = IMAPClient(account['smtp_server'], account['smtp_port'], use_uid=True, ssl=True)
-                server.login(account['smtp_username'], account['smtp_password'])
+        q = Queue()
 
-    
-                folder_status = server.folder_status(self.config[name]['mailbox'], 'UNSEEN')
-                unseen = int(folder_status['UNSEEN'])
+        while True:
+            try:
+                print 'checking'
+                for name, account in self.config.iteritems():
+                    p = Process(target=self.check_mail, args=(account, q))
+                    p.start(); p.join();
+                    unseen = q.get()
+                    if unseen == 'error': continue
+                    else: pass
 
-                try:
-                    with open('/etc/pinotify/prev/' + name, 'r') as f:
-                        previous_unseen = int(f.read()) 
-                except:
-                    previous_unseen = unseen
+                    try:
+                        with open('/etc/pinotify/prev/' + name, 'r') as f:
+                            previous_unseen = int(f.read())
+                    except:
+                        previous_unseen = unseen
 
-                #----
-                if unseen <= previous_unseen:
-                    previous_unseen = unseen
-                    dsp.display_queue.put({'display' : self.config[name]['display'],
-                                           'method'  : 'delete_screen',
-                                           'name'    : name})
+                    #----
+                    if unseen <= previous_unseen:
+                        previous_unseen = unseen
+                        dsp.display_queue.put({'display' : self.config[name]['display'],
+                                               'method'  : 'delete_screen',
+                                               'name'    : name})
 
-                elif unseen > previous_unseen:
-                    mail_new = unseen - previous_unseen
+                    elif unseen > previous_unseen:
+                        mail_new = unseen - previous_unseen
 
-                    msg = "%i new mail" % mail_new
-                    if(mail_new > 1): msg += "s"
-                    dsp.display_queue.put({'display' : self.config[name]['display'],
-                                           'method'  : 'replace_screen',
-                                           'name'    : name,
-                                           'data'    : self.config[name]['abbreviation'] + ' ' + msg + "\n" + ''})
+                        msg = "%i new mail" % mail_new
+                        if(mail_new > 1): msg += "s"
+                        dsp.display_queue.put({'display' : self.config[name]['display'],
+                                               'method'  : 'replace_screen',
+                                               'name'    : name,
+                                               'data'    : self.config[name]['abbreviation'] + ' ' + msg + "\n" + ''})
 
-                with open('/etc/pinotify/prev/' + name, 'w') as f:
-                    f.write(str(previous_unseen)) 
+                    with open('/etc/pinotify/prev/' + name, 'w') as f:
+                        f.write(str(previous_unseen))
 
-                server.logout()
+                    server.logout()
 
-            time.sleep(30)
+                time.sleep(30)
+            except: pass

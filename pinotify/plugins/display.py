@@ -100,7 +100,7 @@ class display(module):
 
             if (method == 'replace_screen'):
                 data = item['data']
-                self.displays[item['display']]['screens'][s_name] = data;
+                self.displays[item['display']]['screens'][s_name] = data; #TODO perhaps have update as the only option and have Null display nothing?
             elif (method == 'delete_screen'):
                 if(s_name in self.displays[item['display']]['screens']):
                     del self.displays[item['display']]['screens'][s_name]

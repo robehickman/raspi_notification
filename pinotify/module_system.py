@@ -72,6 +72,9 @@ def start_workers():
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def check_workers():
     """ Check that workers are still running and restart if not """
+    return
+
+    """
     global workers
 
     new_workers = {}
@@ -83,6 +86,7 @@ def check_workers():
         else: 
             new_workers[n] = worker
     workers = new_workers
+    """
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def call_on_module(name, method, data):
