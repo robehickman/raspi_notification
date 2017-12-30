@@ -37,6 +37,9 @@ class email_check(module):
                     p = Process(target=self.check_mail, args=(account, q))
                     p.start(); p.join();
                     unseen = q.get()
+
+                    print unseen
+
                     if unseen == 'error': continue
                     else: pass
 
