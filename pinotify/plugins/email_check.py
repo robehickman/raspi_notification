@@ -16,12 +16,15 @@ class email_check(module):
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def check_mail(self, account, q):
-        server = IMAPClient(account['smtp_server'], account['smtp_port'], use_uid=True, ssl=True, timeout=10)
-        server.login(account['smtp_username'], account['smtp_password'])
-        folder_status = server.folder_status('Inbox', 'UNSEEN')
-        unseen = int(folder_status['UNSEEN'])
-        q.put(unseen)
-        server.logout()
+        try:
+            server = IMAPClient(account['smtp_server'], account['smtp_port'], use_uid=True, ssl=True, timeout=10)
+            server.login(account['smtp_username'], account['smtp_password'])
+            folder_status = server.folder_status('Inbox', 'UNSEEN')
+            unseen = int(folder_status['UNSEEN'])
+            q.put(unseen)
+            server.logout()
+        except:
+            q.put('error')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     def start_process(self):
